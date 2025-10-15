@@ -2,6 +2,8 @@
 
 import { signInAction } from "@/_server/actions/auth";
 import { useFormState, useFormStatus } from "react-dom";
+import { Button, Input, LogoIcon } from "@/_client/6_shared";
+import { useState } from "react";
 import Link from "next/link";
 
 function SubmitButton() {
@@ -18,68 +20,68 @@ function SubmitButton() {
 }
 
 export default function SigninPage() {
-  const [errorMessage, dispatch] = useFormState(signInAction, undefined);
+  const [emailInput, setEmailInput] = useState<string>("");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-3xl font-bold text-gray-800">
-          Sign In
-        </h2>
-        <form action={dispatch} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email Address
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="you@example.com"
+    <div className="bg-background flex min-h-screen items-center justify-center">
+      {/* Card */}
+      <div className="bg-card border-border rounded-card text-card-foreground flex min-w-[466px] flex-col gap-12 border px-8 py-6">
+        {/* Logo and slogan */}
+        <div>
+          {/* Logo */}
+          <div className="flex w-fit items-center gap-2">
+            <LogoIcon isDarkMode={true} />
+            <h2 className="text-h2/tight font-bold">Finsona</h2>
+          </div>
+          {/* Slogan */}
+          <p className="text-normal/tight">Finance, finally simple.</p>
+        </div>
+
+        {/* Signin section */}
+        <div className="flex flex-col gap-6">
+          {/* Title and welcome text */}
+          <div className="flex flex-col gap-2">
+            <h5 className="text-h5/tight font-semibold">Sign in</h5>
+            <p className="text-muted-foreground text-normal/tight">
+              Hi! Welcome back, you&apos;ve been missing.
+            </p>
+          </div>
+
+          {/* Form */}
+          <form className="flex flex-col gap-4">
+            {/* Inputs */}
+            <Input
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+              label="Email"
+              inputType="email"
+              required={true}
+              placeholder="Enter your email"
+              errorMsg="Invalid email."
+              isValid={null}
             />
-          </div>
+            <div className="flex flex-col gap-2">
+              <Input
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                label="Password"
+                inputType="password"
+                required={true}
+                placeholder="Enter your password"
+                errorMsg="Password id to weak."
+                isValid={true}
+              />
+              <Link
+                href="/auth/forgot-password"
+                className="text-normal/tight text-primary w-fit font-semibold hover:cursor-pointer hover:underline"
+              >
+                Forgot your password?
+              </Link>
+            </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="********"
-            />
-          </div>
-
-          {errorMessage && (
-            <p className="text-sm text-red-600">{errorMessage}</p>
-          )}
-
-          <div>
-            <SubmitButton />
-          </div>
-        </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <Link
-            href="/auth/signup"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            Sign up
-          </Link>
-        </p>
+            <Button type="primary">Sign in</Button>
+          </form>
+        </div>
       </div>
     </div>
   );

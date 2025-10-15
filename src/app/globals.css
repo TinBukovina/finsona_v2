@@ -133,6 +133,12 @@
   --text-h3: var(--text-h3);
   --text-h2: var(--text-h2);
   --text-h1: var(--text-h1);
+
+  /*Border radius*/
+  --radius-none: 0;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-card: 24px;
 }
 
 *::before,

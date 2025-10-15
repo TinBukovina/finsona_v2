@@ -1,18 +1,14 @@
 import Link from "next/link";
-import BudgetsClient from "./_components/BudgetClient";
-import { TodoList } from "./_components/ToDos";
 
 export default async function HomePage() {
   return (
-    <main>
-      {/* Prosljeđujemo podatke klijentskoj komponenti koja se brine za interakciju */}
-      <BudgetsClient />
-      <TodoList />
+    <main className="flex h-dvh w-full flex-col items-center justify-center gap-4">
+      <h1>This is homepage</h1>
       <Link
         href={"/app"}
-        className="inline-block bg-yellow-300 p-4 text-red-500"
+        className="bg-primary text-primary-foreground rounded-md px-4 py-2"
       >
-        App
+        Go to app
       </Link>
     </main>
   );

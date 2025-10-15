@@ -10,5 +10,5 @@ Things to setup
 [X] Drizzle
 [X] Trpc
 [X] Zod
-[] NextAuth
+[X] NextAuth
 [] React query
