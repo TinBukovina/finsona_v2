@@ -1,7 +1,19 @@
-export default function Home() {
+import Link from "next/link";
+import BudgetsClient from "./_components/BudgetClient";
+import { TodoList } from "./_components/ToDos";
+
+export default async function HomePage() {
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
-      <p className="p-4 pt-2">This is text</p>
-    </div>
+    <main>
+      {/* Prosljeđujemo podatke klijentskoj komponenti koja se brine za interakciju */}
+      <BudgetsClient />
+      <TodoList />
+      <Link
+        href={"/app"}
+        className="inline-block bg-yellow-300 p-4 text-red-500"
+      >
+        App
+      </Link>
+    </main>
   );
 }
