@@ -2,9 +2,18 @@
 
 import { signInAction } from "@/_server/actions/auth";
 import { useFormState, useFormStatus } from "react-dom";
-import { Button, Input, LogoIcon } from "@/_client/6_shared";
+import {
+  AppleIcon,
+  Button,
+  EmailFillIcon,
+  EmailIcon,
+  GoogleIcon,
+  Input,
+  LogoIcon,
+} from "@/_client/6_shared";
 import { useState } from "react";
 import Link from "next/link";
+import { SocialButton } from "@/_client/4_features";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -81,6 +90,22 @@ export default function SigninPage() {
 
             <Button type="primary">Sign in</Button>
           </form>
+        </div>
+
+        {/* Separator */}
+        <div className="flex items-center gap-2">
+          <div className="bg-border h-[1px] w-full" />
+          <p className="text-muted-foreground block text-sm/[16px] whitespace-nowrap">
+            Or continue with
+          </p>
+          <div className="bg-border h-[1px] w-full" />
+        </div>
+
+        {/* Social links */}
+        <div className="flex justify-center gap-2">
+          <SocialButton loginType="email" />
+          <SocialButton loginType="google" />
+          <SocialButton loginType="apple" />
         </div>
       </div>
     </div>

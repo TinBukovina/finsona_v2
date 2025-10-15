@@ -1,8 +1,5 @@
 import * as React from "react";
-
-interface IconProps extends React.SVGProps<SVGSVGElement> {
-  className?: string;
-}
+import { IconProps } from ".";
 
 interface LogoIconProps extends IconProps {
   isDarkMode: boolean;
