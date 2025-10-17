@@ -49,13 +49,19 @@ export function Input({
               isValid === false,
             "focus:outline-primary/24 focus:border-primary": isValid === true,
             "focus:outline-primary/25 focus:border-primary": isValid === null,
+            "bg-muted text-muted-foreground": disabled,
           },
         )}
         disabled={disabled}
       />
 
       {isValid && (
-        <CheckIcon className="text-success bg-input absolute top-[39px] right-[17px] h-[24px] w-[24px]" />
+        <CheckIcon
+          className={cn(
+            "text-success bg-input absolute top-[39px] right-[17px] h-[24px] w-[24px]",
+            { "bg-muted": disabled },
+          )}
+        />
       )}
     </div>
   );

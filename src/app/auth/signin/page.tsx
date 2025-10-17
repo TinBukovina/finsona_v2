@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input, LogoIcon } from "@/_client/6_shared";
+import { Button, cn, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
 import Link from "next/link";
 import { SocialButton } from "@/_client/4_features";
 import { useState } from "react";
@@ -27,6 +27,7 @@ export default function SigninPage() {
   });
   const [formErrors, setFormErrors] = useState<FormErrorState>({});
   const [isFormSubmited, setIsFormSubmited] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -38,13 +39,15 @@ export default function SigninPage() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsFormSubmited(true);
+    setIsLoading(true);
+    setFormErrors({});
 
     try {
       const res = await signInAction(form);
       console.log("res: ", res);
 
       if (res.status === "success") {
-        router.push("/app");
+        //router.push("/app");
       } else {
         setFormErrors({
           message:
@@ -57,13 +60,15 @@ export default function SigninPage() {
     } catch (error) {
       setFormErrors({ message: "An unexpected error occurred." });
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="bg-background flex h-dvh items-center justify-center">
+    <div className="flex h-dvh items-center justify-center">
       {/* Card */}
-      <div className="sm:bg-card sm:border-border rounded-card text-card-foreground flex h-full w-dvh flex-col gap-8 px-6 py-4 sm:w-[400px] sm:min-w-[400px] sm:border">
+      <div className="sm:bg-card sm:border-border rounded-card text-card-foreground flex h-full w-dvh flex-col justify-center gap-8 px-6 py-4 sm:h-fit sm:w-[400px] sm:min-w-[400px] sm:border">
         {/* Logo and slogan */}
         <div className="flex flex-col gap-0">
           {/* Logo */}
@@ -99,6 +104,7 @@ export default function SigninPage() {
                 formErrors.errors?.email ? false : isFormSubmited ? true : null
               }
               errorMsg={formErrors.errors?.email?.[0]}
+              disabled={isLoading}
             />
             <div className="flex flex-col gap-2">
               <Input
@@ -116,17 +122,15 @@ export default function SigninPage() {
                       : null
                 }
                 errorMsg={formErrors.errors?.password?.[0]}
+                disabled={isLoading}
               />
-              <Link
-                href="/auth/forgot-password"
-                className="text-normal/tight text-primary w-fit font-semibold hover:cursor-pointer hover:underline"
-              >
+              <RedirectLink href="/auth/forgot-password" disabled={isLoading}>
                 Forgot your password?
-              </Link>
+              </RedirectLink>
             </div>
 
-            <Button type="primary" action="submit">
-              Sign in
+            <Button type="primary" action="submit" disabled={isLoading}>
+              {isLoading ? "Loading..." : "Sign in"}
             </Button>
             {formErrors.message && (
               <p className="text-normal/[16px] text-destructive w-full text-center">
@@ -147,20 +151,17 @@ export default function SigninPage() {
 
         {/* Social links */}
         <div className="flex justify-center gap-2">
-          <SocialButton loginType="email" />
-          <SocialButton loginType="google" />
-          <SocialButton loginType="apple" />
+          <SocialButton loginType="email" disabled={isLoading} />
+          <SocialButton loginType="google" disabled={isLoading} />
+          <SocialButton loginType="apple" disabled={isLoading} />
         </div>
 
         {/* Don't have an account */}
         <p className="text-center text-sm/[16px]">
           Don&apos;t have an account?{" "}
-          <Link
-            href="/auth/signup"
-            className="text-primary font-semibold hover:cursor-pointer hover:underline"
-          >
+          <RedirectLink href="/auth/signup" disabled={isLoading}>
             Sign up
-          </Link>
+          </RedirectLink>
         </p>
       </div>
     </div>
