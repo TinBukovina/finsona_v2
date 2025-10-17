@@ -4,6 +4,8 @@ interface ButtonProps {
   children: React.ReactNode;
   type?: "secondary" | "primary" | "destructive";
   action?: "submit";
+  disabled?: boolean;
+  ariaDisabled?: boolean;
   handleClick?: () => void;
 }
 
@@ -11,6 +13,8 @@ export function Button({
   children,
   type = "secondary",
   action,
+  disabled = false,
+  ariaDisabled = false,
   handleClick,
 }: ButtonProps) {
   return (
@@ -28,6 +32,8 @@ export function Button({
         },
       )}
       onClick={handleClick}
+      disabled={disabled}
+      aria-disabled={ariaDisabled}
     >
       {children}
     </button>

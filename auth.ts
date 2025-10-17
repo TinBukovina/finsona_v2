@@ -1,22 +1,11 @@
 import { db } from "@/_db/drizzle";
 import { accounts, sessions, users, verificationTokens } from "@/_db/schema";
+import { signinSchema } from "@/_server/types";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import z, { ZodError } from "zod";
-
-export const signInSchema = z.object({
-  email: z
-    .string() // Uklonjen je objekt s greškom odavde
-    .min(1, "Email is required")
-    .email("Invalid email"),
-  password: z
-    .string() // I odavde
-    .min(1, "Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-});
+import { ZodError } from "zod";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db, {
@@ -28,10 +17,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
+        console.log("\n--- START authorize function ---"); // DEBUG LOG A
         try {
           // 1. Validacija ulaznih podataka sa Zod-om
           const { email, password } =
-            await signInSchema.parseAsync(credentials);
+            await signinSchema.parseAsync(credentials);
+
+          if (!email || !password) {
+            return null;
+          }
 
           // 2. Traženje korisnika u bazi
           const user = await db.query.users.findFirst({
@@ -53,10 +47,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
-          // 5. Vraćanje korisnika ako je sve u redu
+          console.log("USER: ", user);
           return user;
         } catch (error) {
           // Ako validacija ne uspije, Zod će baciti grešku
+          console.error("--- UNHANDLED ERROR IN authorize ---", error); // DEBUG LOG J
+          // Vraćanjem null sprječavamo potpuni pad aplikacije
           if (error instanceof ZodError) {
             return null; // Vraćamo null da Auth.js zna da prijava nije uspjela
           }

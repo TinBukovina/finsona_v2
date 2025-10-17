@@ -2,18 +2,21 @@ import { cn } from "../../lib";
 import { CheckIcon } from "../svgs";
 
 interface InputProps {
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  defaultValue?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
   inputType?: string;
   placeholder?: string;
   required?: boolean;
   isValid?: boolean | null;
   errorMsg?: string;
+  disabled?: boolean;
 }
 
 export function Input({
   value,
+  defaultValue,
   onChange,
   label,
   inputType = "text",
@@ -21,6 +24,7 @@ export function Input({
   required = true,
   isValid = null,
   errorMsg = "",
+  disabled = false,
 }: InputProps) {
   return (
     <div className="relative flex flex-col gap-2">
@@ -31,10 +35,11 @@ export function Input({
 
       <input
         value={value}
+        defaultValue={defaultValue}
         onChange={onChange}
         type={inputType}
         id="userEmail"
-        name="email"
+        name={label?.toLowerCase()}
         placeholder={placeholder}
         required={required}
         className={cn(
@@ -46,6 +51,7 @@ export function Input({
             "focus:outline-primary/25 focus:border-primary": isValid === null,
           },
         )}
+        disabled={disabled}
       />
 
       {isValid && (

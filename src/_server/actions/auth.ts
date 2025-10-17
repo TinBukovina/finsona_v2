@@ -7,34 +7,61 @@ import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 import z from "zod";
+import { signinSchema } from "../types";
+
+type SigninFormData = z.infer<typeof signinSchema>;
+type ActionState = {
+  status: "success" | "error";
+  message?: string | null;
+  fieldValue?: SigninFormData;
+  errors?: { [K in keyof SigninFormData]?: string[] };
+};
 
 export async function signInAction(
-  prevState: string | undefined,
-  formData: FormData,
-) {
+  formData: SigninFormData,
+): Promise<ActionState> {
+  console.log("STARTTTTT");
+  const validatedFields = signinSchema.safeParse(formData);
+
+  if (!validatedFields.success) {
+    return {
+      status: "error",
+      message: "Please fix the errors below.",
+      errors: validatedFields.error.flatten().fieldErrors,
+      fieldValue: {
+        email: "test",
+        password: "test",
+      },
+    };
+  }
+
   try {
-    // Ovaj poziv će ili uspjeti i baciti NEXT_REDIRECT,
-    // ili neće uspjeti i baciti AuthError.
-    await signIn("credentials", formData);
+    console.log("BOK");
+    const res = await signIn("credentials", {
+      ...validatedFields.data,
+      redirect: false,
+    });
+    return { status: "success", message: "Sign in successful!" };
   } catch (error) {
-    // Hvatamo samo stvarne greške autentifikacije
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return "Invalid email or password.";
+          return { status: "error", message: "Invalid email or password." };
         default:
-          return "Something went wrong.";
+          return {
+            status: "error",
+            message: "Something went wrong. Please try again.",
+          };
       }
     }
-    // VAŽNO: Ako greška nije AuthError (npr. ako je NEXT_REDIRECT),
-    // moramo je ponovno baciti da bi Next.js mogao dovršiti preusmjeravanje.
+    console.log(error);
     throw error;
   }
 }
 
 const signUpSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().min(1, "Email is required").email("Invalid email"),
+  email: z.email("Invalid email").min(1, "Email is required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -92,5 +119,5 @@ export async function signUpAction(
 }
 
 export async function signOutAction() {
-  await signOut();
+  await signOut({ redirectTo: "/auth/signin" });
 }

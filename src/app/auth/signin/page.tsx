@@ -1,45 +1,74 @@
 "use client";
 
-import { signInAction } from "@/_server/actions/auth";
-import { useFormState, useFormStatus } from "react-dom";
-import {
-  AppleIcon,
-  Button,
-  EmailFillIcon,
-  EmailIcon,
-  GoogleIcon,
-  Input,
-  LogoIcon,
-} from "@/_client/6_shared";
-import { useState } from "react";
+import { Button, Input, LogoIcon } from "@/_client/6_shared";
 import Link from "next/link";
 import { SocialButton } from "@/_client/4_features";
+import { useState } from "react";
+import { signInAction } from "@/_server/actions/auth";
+import { signinSchema } from "@/_server/types";
+import z from "zod";
+import { useRouter } from "next/navigation";
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      aria-disabled={pending}
-      className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
-    >
-      {pending ? "Signing In..." : "Sign In"}
-    </button>
-  );
-}
+type SigninFormData = z.infer<typeof signinSchema>;
+type FormErrorState = {
+  message?: string | null;
+  errors?: {
+    email?: string[];
+    password?: string[];
+  };
+};
 
 export default function SigninPage() {
-  const [emailInput, setEmailInput] = useState<string>("");
+  const router = useRouter();
+
+  const [form, setForm] = useState<SigninFormData>({
+    email: "test@gmail.com",
+    password: "test1234",
+  });
+  const [formErrors, setFormErrors] = useState<FormErrorState>({});
+  const [isFormSubmited, setIsFormSubmited] = useState<boolean>(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsFormSubmited(true);
+
+    try {
+      const res = await signInAction(form);
+      console.log("res: ", res);
+
+      if (res.status === "success") {
+        router.push("/app");
+      } else {
+        setFormErrors({
+          message:
+            res.message !== "Please fix the errors below."
+              ? res.message
+              : "Fix errors above.",
+          errors: res.errors,
+        });
+      }
+    } catch (error) {
+      setFormErrors({ message: "An unexpected error occurred." });
+      console.log(error);
+    }
+  };
 
   return (
     <div className="bg-background flex min-h-screen items-center justify-center">
       {/* Card */}
-      <div className="bg-card border-border rounded-card text-card-foreground flex min-w-[466px] flex-col gap-12 border px-8 py-6">
+      <div className="bg-card border-border rounded-card text-card-foreground flex min-w-[400px] flex-col gap-8 border px-6 py-4">
         {/* Logo and slogan */}
-        <div>
+        <div className="flex flex-col gap-0">
           {/* Logo */}
-          <div className="flex w-fit items-center gap-2">
-            <LogoIcon isDarkMode={true} />
+          <div className="flex w-fit items-center gap-4">
+            <LogoIcon className="h-[40px] w-[40px]" isDarkMode={true} />
             <h2 className="text-h2/tight font-bold">Finsona</h2>
           </div>
           {/* Slogan */}
@@ -57,28 +86,36 @@ export default function SigninPage() {
           </div>
 
           {/* Form */}
-          <form className="flex flex-col gap-4">
+          <form onSubmit={onSubmit} className="relative flex flex-col gap-4">
             {/* Inputs */}
             <Input
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
+              value={form.email}
+              onChange={handleChange}
               label="Email"
               inputType="email"
               required={true}
               placeholder="Enter your email"
-              errorMsg="Invalid email."
-              isValid={null}
+              isValid={
+                formErrors.errors?.email ? false : isFormSubmited ? true : null
+              }
+              errorMsg={formErrors.errors?.email?.[0]}
             />
             <div className="flex flex-col gap-2">
               <Input
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
+                value={form.password}
+                onChange={handleChange}
                 label="Password"
                 inputType="password"
                 required={true}
                 placeholder="Enter your password"
-                errorMsg="Password id to weak."
-                isValid={true}
+                isValid={
+                  formErrors.errors?.password
+                    ? false
+                    : isFormSubmited
+                      ? true
+                      : null
+                }
+                errorMsg={formErrors.errors?.password?.[0]}
               />
               <Link
                 href="/auth/forgot-password"
@@ -88,7 +125,14 @@ export default function SigninPage() {
               </Link>
             </div>
 
-            <Button type="primary">Sign in</Button>
+            <Button type="primary" action="submit">
+              Sign in
+            </Button>
+            {formErrors.message && (
+              <p className="text-normal/[16px] text-destructive w-full text-center">
+                {formErrors.message}
+              </p>
+            )}
           </form>
         </div>
 
@@ -107,6 +151,17 @@ export default function SigninPage() {
           <SocialButton loginType="google" />
           <SocialButton loginType="apple" />
         </div>
+
+        {/* Don't have an account */}
+        <p className="text-center text-sm/[16px]">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/auth/signup"
+            className="text-primary font-semibold hover:cursor-pointer hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );
