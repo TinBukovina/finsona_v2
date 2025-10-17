@@ -1,6 +1,12 @@
 "use client";
 
-import { Button, cn, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
+import {
+  Button,
+  Input,
+  LogoIcon,
+  RedirectLink,
+  toast,
+} from "@/_client/6_shared";
 import { SocialButton } from "@/_client/4_features";
 import { useState } from "react";
 import { signInAction } from "@/_server/actions/auth";

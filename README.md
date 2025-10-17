@@ -14,6 +14,6 @@ Things to setup
 [] React query
 
 Next Things
-[] Dodati na confirm password utječe na registraciju
+[X] Dodati na confirm password utječe na registraciju
 [] Dodati toastove
 [] Implementirati ostatak authentifikacije

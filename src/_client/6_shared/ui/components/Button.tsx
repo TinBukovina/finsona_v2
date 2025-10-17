@@ -23,7 +23,7 @@ export function Button({
       className={cn(
         "h-[40px] w-full rounded-full border border-transparent px-4 py-3 font-bold outline-transparent transition-all duration-200 ease-out hover:cursor-pointer focus:outline-[3px] active:scale-98",
         {
-          "bg-secondary hover:bg-secondary/80 text-secondary-foreground border-border text-normal/[16px] focus:outline-primary/25 focus:border-primary":
+          "bg-secondary border-border hover:bg-secondary/80 text-secondary-foreground text-normal/[16px] focus:outline-primary/25 focus:border-primary border-[1px]":
             type === "secondary",
           "bg-primary text-primary-foreground text-normal/[16px] hover:bg-primary/80 focus:outline-primary/25 focus:border-primary":
             type === "primary",
