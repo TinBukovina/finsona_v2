@@ -1,11 +1,7 @@
 "use client";
 
 import { signUpAction } from "@/_server/actions/auth";
-import { useFormState, useFormStatus } from "react-dom";
-import Link from "next/link";
 import { Button, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
-import z from "zod";
-import { signupSchema } from "@/_server/types";
 import { useState } from "react";
 
 interface SignupFormData {
@@ -29,7 +25,7 @@ export default function SignupPage() {
   const [form, setForm] = useState<SignupFormData>({
     name: "Tin",
     surname: "B",
-    email: "tin@gmail",
+    email: "tin@gmail.com",
     password: "test1234",
     confirmPassword: "test123",
   });
@@ -49,6 +45,16 @@ export default function SignupPage() {
     setFormErrors({});
     setIsLoading(true);
     setIsFormSubmited(true);
+
+    if (form.password !== form.confirmPassword) {
+      setFormErrors({
+        message: "Passwords do not match.",
+      });
+
+      setIsLoading(false);
+      setIsFormSubmited(false);
+      return;
+    }
 
     try {
       const res = await signUpAction({
@@ -204,7 +210,9 @@ export default function SignupPage() {
         {/* Don't have an account */}
         <p className="text-center text-sm/[16px]">
           Don&apos;t have an account?{" "}
-          <RedirectLink href="/auth/signin">Sign in</RedirectLink>
+          <RedirectLink href="/auth/signin" disabled={isLoading}>
+            Sign in
+          </RedirectLink>
         </p>
       </div>
     </div>

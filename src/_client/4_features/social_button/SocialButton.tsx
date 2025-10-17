@@ -42,7 +42,7 @@ export function SocialButton({ loginType, disabled }: SocialButtonProps) {
         router.push(socialLink.link);
       }}
       className={cn(
-        "bg-secondary border-border hover:bg-secondary/80 focus:border-primary focus:outline-primary/25 text-secondary-foreground flex w-full items-center justify-center rounded-md border-[1px] py-3 outline-transparent transition-all duration-200 ease-out hover:cursor-pointer focus:outline-[3px] active:scale-98",
+        "bg-secondary border-border hover:bg-secondary/80 focus:border-primary focus:outline-primary/25 text-secondary-foreground flex h-[48px] w-full items-center justify-center rounded-md border-[1px] py-3 outline-transparent transition-all duration-200 ease-out hover:cursor-pointer focus:outline-[3px] active:scale-98",
         {
           "bg-muted text-muted-foreground": disabled,
         },

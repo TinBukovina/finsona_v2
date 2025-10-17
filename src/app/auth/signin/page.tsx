@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, cn, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
-import Link from "next/link";
 import { SocialButton } from "@/_client/4_features";
 import { useState } from "react";
 import { signInAction } from "@/_server/actions/auth";

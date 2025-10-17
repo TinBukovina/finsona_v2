@@ -12,3 +12,8 @@ Things to setup
 [X] Zod
 [X] NextAuth
 [] React query
+
+Next Things
+[] Dodati na confirm password utječe na registraciju
+[] Dodati toastove
+[] Implementirati ostatak authentifikacije
