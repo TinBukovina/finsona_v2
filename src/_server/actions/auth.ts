@@ -66,7 +66,7 @@ export async function signUpAction(
   if (!validatedFields.success) {
     return {
       status: "error",
-      message: "Please fix the errors below.",
+      message: "Please fix all errors.",
       errors: validatedFields.error.flatten().fieldErrors,
       fieldValue: {
         email: "test",

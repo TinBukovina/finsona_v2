@@ -1,7 +1,13 @@
 "use client";
 
 import { signUpAction } from "@/_server/actions/auth";
-import { Button, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
+import {
+  Button,
+  Input,
+  LogoIcon,
+  RedirectLink,
+  toast,
+} from "@/_client/6_shared";
 import { useState } from "react";
 
 interface SignupFormData {
@@ -26,8 +32,8 @@ export default function SignupPage() {
     name: "Tin",
     surname: "B",
     email: "tin@gmail.com",
-    password: "test1234",
-    confirmPassword: "test123",
+    password: "Test123!$%",
+    confirmPassword: "Test123!$",
   });
   const [formErrors, setFormErrors] = useState<FormErrorState>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -47,12 +53,14 @@ export default function SignupPage() {
     setIsFormSubmited(true);
 
     if (form.password !== form.confirmPassword) {
-      setFormErrors({
-        message: "Passwords do not match.",
-      });
-
       setIsLoading(false);
       setIsFormSubmited(false);
+      setFormErrors({
+        message: "Please fix all errors.",
+        errors: {
+          password: ["Passwords do not match."],
+        },
+      });
       return;
     }
 
@@ -67,11 +75,9 @@ export default function SignupPage() {
 
       if (res.status === "success") {
       } else {
+        toast.error(res.message || "An unexpected error occurred.");
         setFormErrors({
-          message:
-            res.message !== "Please fix the errors below."
-              ? res.message
-              : "Fix errors above.",
+          message: res.message,
           errors: res.errors,
         });
       }
@@ -157,7 +163,7 @@ export default function SignupPage() {
                 required={true}
                 placeholder="Enter your email"
                 isValid={
-                  formErrors.errors?.email
+                  !!formErrors.errors?.email
                     ? false
                     : isFormSubmited
                       ? true
@@ -192,6 +198,13 @@ export default function SignupPage() {
                 required={true}
                 placeholder="Repeat password"
                 disabled={isLoading}
+                isValid={
+                  formErrors.errors?.password
+                    ? false
+                    : isFormSubmited
+                      ? true
+                      : null
+                }
               />
             </div>
 
@@ -199,11 +212,6 @@ export default function SignupPage() {
             <Button type="primary" action="submit" disabled={isLoading}>
               {isLoading ? "Loading..." : "Sign in"}
             </Button>
-            {formErrors.message && (
-              <p className="text-normal/[16px] text-destructive w-full text-center">
-                {formErrors.message}
-              </p>
-            )}
           </form>
         </div>
 

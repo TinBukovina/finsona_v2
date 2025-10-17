@@ -28,7 +28,7 @@ export default function SigninPage() {
 
   const [form, setForm] = useState<SigninFormData>({
     email: "test@gmail.com",
-    password: "test1234",
+    password: "Test123!$%",
   });
   const [formErrors, setFormErrors] = useState<FormErrorState>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -54,11 +54,9 @@ export default function SigninPage() {
       if (res.status === "success") {
         router.push("/app");
       } else {
+        toast.error(res.message || "An unexpected error occurred.");
         setFormErrors({
-          message:
-            res.message !== "Please fix the errors below."
-              ? res.message
-              : "Fix errors above.",
+          message: res.message,
           errors: res.errors,
         });
       }
@@ -106,10 +104,6 @@ export default function SigninPage() {
               inputType="email"
               required={true}
               placeholder="Enter your email"
-              isValid={
-                formErrors.errors?.email ? false : isFormSubmited ? true : null
-              }
-              errorMsg={formErrors.errors?.email?.[0]}
               disabled={isLoading}
             />
             <div className="flex flex-col gap-2">
@@ -121,14 +115,6 @@ export default function SigninPage() {
                 inputType="password"
                 required={true}
                 placeholder="Enter your password"
-                isValid={
-                  formErrors.errors?.password
-                    ? false
-                    : isFormSubmited
-                      ? true
-                      : null
-                }
-                errorMsg={formErrors.errors?.password?.[0]}
                 disabled={isLoading}
               />
               {/* Forgot password */}
@@ -141,11 +127,6 @@ export default function SigninPage() {
             <Button type="primary" action="submit" disabled={isLoading}>
               {isLoading ? "Loading..." : "Sign in"}
             </Button>
-            {formErrors.message && (
-              <p className="text-normal/[16px] text-destructive w-full text-center">
-                {formErrors.message}
-              </p>
-            )}
           </form>
         </div>
 

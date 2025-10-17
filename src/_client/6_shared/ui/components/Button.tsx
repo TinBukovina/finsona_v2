@@ -29,7 +29,8 @@ export function Button({
             type === "primary",
           "bg-destructive hover:bg-destructive/80 text-destructive-foreground text-normal/[16px] focus:outline-destructive/25 focus:border-destructive":
             type === "destructive",
-          "bg-muted text-muted-foreground border-border border-[1px]": disabled,
+          "bg-muted hover:bg-muted text-muted-foreground border-border border-[1px] hover:cursor-auto":
+            disabled,
         },
       )}
       onClick={handleClick}
