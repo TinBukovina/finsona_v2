@@ -5,6 +5,7 @@ interface InputProps {
   value?: string;
   defaultValue?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  name: string;
   label?: string;
   inputType?: string;
   placeholder?: string;
@@ -18,6 +19,7 @@ export function Input({
   value,
   defaultValue,
   onChange,
+  name,
   label,
   inputType = "text",
   placeholder,
@@ -27,7 +29,7 @@ export function Input({
   disabled = false,
 }: InputProps) {
   return (
-    <div className="relative flex flex-col gap-2">
+    <div className="relative flex w-full flex-col gap-2">
       <div className="text-normal/tight flex justify-between">
         {label && <label htmlFor="userEmail">{label}</label>}
         {isValid === false && <p className="text-destructive">{errorMsg}</p>}
@@ -39,11 +41,11 @@ export function Input({
         onChange={onChange}
         type={inputType}
         id="userEmail"
-        name={label?.toLowerCase()}
+        name={name}
         placeholder={placeholder}
         required={required}
         className={cn(
-          "bg-input placeholder:text-normal/tight hover:bg-input/80 border-border h-[48px] rounded-md border-[1px] p-4 outline-transparent transition-all duration-200 ease-out focus:outline-[5px]",
+          "bg-input placeholder:text-normal/tight hover:bg-input/80 border-border h-[48px] w-full rounded-md border-[1px] p-4 outline-transparent transition-all duration-200 ease-out focus:outline-[5px]",
           {
             "border-destructive focus:outline-destructive/25 focus:border-destructive":
               isValid === false,

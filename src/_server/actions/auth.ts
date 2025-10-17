@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 import z from "zod";
-import { signinSchema } from "../types";
+import { signinSchema, signupSchema } from "../types";
 
 type SigninFormData = z.infer<typeof signinSchema>;
 type ActionState = {
@@ -20,7 +20,6 @@ type ActionState = {
 export async function signInAction(
   formData: SigninFormData,
 ): Promise<ActionState> {
-  console.log("STARTTTTT");
   const validatedFields = signinSchema.safeParse(formData);
 
   if (!validatedFields.success) {
@@ -36,8 +35,7 @@ export async function signInAction(
   }
 
   try {
-    console.log("BOK");
-    const res = await signIn("credentials", {
+    await signIn("credentials", {
       ...validatedFields.data,
       redirect: false,
     });
@@ -54,42 +52,38 @@ export async function signInAction(
           };
       }
     }
-    console.log(error);
+
     throw error;
   }
 }
 
-const signUpSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.email("Invalid email").min(1, "Email is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+type SignupFormData = z.infer<typeof signupSchema>;
 
 export async function signUpAction(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prevState: any | undefined,
-  formData: FormData,
-) {
-  const rawFormData = Object.fromEntries(formData.entries());
-
-  const validatedFields = signUpSchema.safeParse(rawFormData);
+  formData: SignupFormData,
+): Promise<ActionState> {
+  const validatedFields = signupSchema.safeParse(formData);
   if (!validatedFields.success) {
     return {
-      error: "Invalid fields provided.",
-      issues: validatedFields.error.flatten().fieldErrors,
+      status: "error",
+      message: "Please fix the errors below.",
+      errors: validatedFields.error.flatten().fieldErrors,
+      fieldValue: {
+        email: "test",
+        password: "test",
+      },
     };
   }
 
   const { name, email, password } = validatedFields.data;
 
   try {
-    // try...catch blok sada štiti samo logiku baze podataka
     const existingUser = await db.query.users.findFirst({
       where: eq(users.email, email),
     });
 
     if (existingUser) {
-      return { error: "User with this email already exists." };
+      return { status: "error", message: "Email already exists." };
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -101,18 +95,17 @@ export async function signUpAction(
     });
   } catch (error) {
     console.error("Registration DB error:", error);
-    return { error: "Something went wrong during user creation." };
+    return { status: "error", message: "Something went wrong." };
   }
 
-  // Nakon što je korisnik uspješno kreiran, pozivamo signIn.
-  // Ovaj poziv je IZVAN try...catch bloka.
   try {
     await signIn("credentials", { email, password, redirectTo: "/app" });
+
+    return { status: "success", message: "Sign up successfully!" };
   } catch (error) {
-    // Ovaj catch blok je tu za svaki slučaj, ako prijava ne uspije odmah nakon registracije.
-    // Najvažnije je da će propustiti NEXT_REDIRECT grešku.
     if (error instanceof AuthError) {
-      return { error: "Could not sign in after registration." };
+      console.log("Login DB error: ", error);
+      return { status: "error", message: "Something went wrong." };
     }
     throw error;
   }

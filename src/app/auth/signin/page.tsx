@@ -26,8 +26,8 @@ export default function SigninPage() {
     password: "test1234",
   });
   const [formErrors, setFormErrors] = useState<FormErrorState>({});
-  const [isFormSubmited, setIsFormSubmited] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFormSubmited, setIsFormSubmited] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -47,7 +47,7 @@ export default function SigninPage() {
       console.log("res: ", res);
 
       if (res.status === "success") {
-        //router.push("/app");
+        router.push("/app");
       } else {
         setFormErrors({
           message:
@@ -96,6 +96,7 @@ export default function SigninPage() {
             <Input
               value={form.email}
               onChange={handleChange}
+              name="email"
               label="Email"
               inputType="email"
               required={true}
@@ -110,6 +111,7 @@ export default function SigninPage() {
               <Input
                 value={form.password}
                 onChange={handleChange}
+                name="password"
                 label="Password"
                 inputType="password"
                 required={true}
@@ -124,11 +126,13 @@ export default function SigninPage() {
                 errorMsg={formErrors.errors?.password?.[0]}
                 disabled={isLoading}
               />
+              {/* Forgot password */}
               <RedirectLink href="/auth/forgot-password" disabled={isLoading}>
                 Forgot your password?
               </RedirectLink>
             </div>
 
+            {/* Signin button */}
             <Button type="primary" action="submit" disabled={isLoading}>
               {isLoading ? "Loading..." : "Sign in"}
             </Button>

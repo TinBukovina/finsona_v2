@@ -16,9 +16,9 @@ export function RedirectLink({
 }: RedirectLinkProps) {
   if (disabled) {
     return (
-      <p className="text-muted-foreground inline-block font-semibold">
+      <span className="text-muted-foreground inline-block font-semibold">
         {children}
-      </p>
+      </span>
     );
   }
   return (
