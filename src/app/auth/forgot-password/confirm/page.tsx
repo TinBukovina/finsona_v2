@@ -1,64 +1,26 @@
 "use client";
 
-import {
-  Button,
-  Input,
-  LogoIcon,
-  RedirectLink,
-  toast,
-} from "@/_client/6_shared";
 import { SocialButton } from "@/_client/4_features";
-import { useState } from "react";
-import { signInAction } from "@/_server/actions/auth";
-import { signinSchema } from "@/_server/types";
-import z from "zod";
+import { Button, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-type SigninFormData = z.infer<typeof signinSchema>;
-type FormErrorState = {
-  message?: string | null;
-  errors?: {
-    email?: string[];
-    password?: string[];
-  };
-};
+interface FormDataInterface {
+  password: string;
+  confirmPassword: string;
+}
 
-export default function SigninPage() {
+export default function ConfirmPage() {
   const router = useRouter();
 
-  const [form, setForm] = useState<SigninFormData>({
-    email: "tin.bukovina1@gmail.com",
+  const [form, setForm] = useState<FormDataInterface>({
     password: "Test123!$%",
+    confirmPassword: "Test123!$%",
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const res = await signInAction(form);
-      console.log("res: ", res);
-
-      if (res.status === "success") {
-        router.push("/app");
-      } else {
-        toast.error(res.message || "An unexpected error occurred.");
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred.");
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleChange = () => {};
+  const onSubmit = () => {};
 
   return (
     <div className="flex h-dvh items-center justify-center">
@@ -79,9 +41,9 @@ export default function SigninPage() {
         <div className="flex flex-col gap-6">
           {/* Title and welcome text */}
           <div className="flex flex-col gap-2">
-            <h5 className="text-h5/tight font-semibold">Sign in</h5>
+            <h5 className="text-h5/tight font-semibold">Password reset</h5>
             <p className="text-muted-foreground text-normal/tight">
-              Hi! Welcome back, you&apos;ve been missing.
+              Enter your new password.
             </p>
           </div>
 
@@ -89,36 +51,38 @@ export default function SigninPage() {
           <form onSubmit={onSubmit} className="relative flex flex-col gap-4">
             {/* Inputs */}
             <Input
-              value={form.email}
+              value={form.password}
               onChange={handleChange}
-              name="email"
-              label="Email"
-              inputType="email"
+              name="password"
+              label="Password"
+              inputType="password"
               required={true}
-              placeholder="Enter your email"
+              placeholder="Enter your password"
               disabled={isLoading}
             />
-            <div className="flex flex-col gap-2">
-              <Input
-                value={form.password}
-                onChange={handleChange}
-                name="password"
-                label="Password"
-                inputType="password"
-                required={true}
-                placeholder="Enter your password"
-                disabled={isLoading}
-              />
-              {/* Forgot password */}
-              <RedirectLink href="/auth/forgot-password" disabled={isLoading}>
-                Forgot your password?
-              </RedirectLink>
-            </div>
+            <Input
+              value={form.confirmPassword}
+              onChange={handleChange}
+              name="confirmPassword"
+              inputType="password"
+              required={true}
+              placeholder="Repeat password"
+              disabled={isLoading}
+            />
 
-            {/* Signin button */}
-            <Button type="primary" action="submit" disabled={isLoading}>
-              {isLoading ? "Loading..." : "Sign in"}
-            </Button>
+            {/* Buttons */}
+            <div className="flex flex-col gap-4">
+              <Button
+                type="primary"
+                handleClick={(e) => {
+                  e.preventDefault();
+                  router.push("/auth/signin");
+                }}
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Reset password"}
+              </Button>
+            </div>
           </form>
         </div>
 

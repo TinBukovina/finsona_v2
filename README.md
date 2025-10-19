@@ -15,5 +15,5 @@ Things to setup
 
 Next Things
 [X] Dodati na confirm password utječe na registraciju
-[] Dodati toastove
+[X] Dodati toastove
 [] Implementirati ostatak authentifikacije

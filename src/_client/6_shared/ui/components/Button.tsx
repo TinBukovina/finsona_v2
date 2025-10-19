@@ -6,7 +6,7 @@ interface ButtonProps {
   action?: "submit";
   disabled?: boolean;
   ariaDisabled?: boolean;
-  handleClick?: () => void;
+  handleClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export function Button({
