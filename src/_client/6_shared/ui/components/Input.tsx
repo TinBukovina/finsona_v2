@@ -30,10 +30,12 @@ export function Input({
 }: InputProps) {
   return (
     <div className="relative flex w-full flex-col gap-2">
-      <div className="text-normal/tight flex justify-between">
-        {label && <label htmlFor="userEmail">{label}</label>}
-        {isValid === false && <p className="text-destructive">{errorMsg}</p>}
-      </div>
+      {label && (
+        <div className="text-normal/tight flex justify-between">
+          {label && <label htmlFor="userEmail">{label}</label>}
+          {isValid === false && <p className="text-destructive">{errorMsg}</p>}
+        </div>
+      )}
 
       <input
         value={value}
