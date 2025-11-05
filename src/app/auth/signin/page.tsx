@@ -15,13 +15,6 @@ import z from "zod";
 import { useRouter } from "next/navigation";
 
 type SigninFormData = z.infer<typeof signinSchema>;
-type FormErrorState = {
-  message?: string | null;
-  errors?: {
-    email?: string[];
-    password?: string[];
-  };
-};
 
 export default function SigninPage() {
   const router = useRouter();
