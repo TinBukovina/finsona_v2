@@ -1,0 +1,2 @@
+- href in a link should have valid link in order to work (with http and everything)
+- resend email servise has log section to see if something went wrong or error on their side. This comes in handy because it doesn't throw error in app so everything is fine but email is not sent.

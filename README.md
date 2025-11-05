@@ -1,3 +1,24 @@
+Next Things
+[] Implement desktop navigation
+[] Implement mobile navigation
+[] Implement theme change
+[] Implement logout btn
+[] Implement Transaction section
+[] Implement Budget section
+
+Naivgation
+
+Auth
+[X] Sigin
+[X] Signup
+[X] Confirmation email for signup
+[X] Password reset
+[] Email login
+[] Social logins
+
+Random
+[X] Toasts
+
 Things to setup
 [X] Easlint rules
 [X] Prettier
@@ -12,8 +33,3 @@ Things to setup
 [X] Zod
 [X] NextAuth
 [] React query
-
-Next Things
-[X] Dodati na confirm password utječe na registraciju
-[X] Dodati toastove
-[] Implementirati ostatak authentifikacije

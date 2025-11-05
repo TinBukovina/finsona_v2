@@ -1,12 +1,14 @@
 "use server";
 
+import { Resend } from "resend";
 import { signIn, signOut } from "@/../auth";
 import { db } from "@/_db/drizzle";
-import { users } from "@/_db/schema";
+import { passwordResetTokens, users } from "@/_db/schema";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 import z from "zod";
+import { v4 as uuidv4 } from "uuid";
 import { signinSchema, signupSchema } from "../types";
 
 type SigninFormData = z.infer<typeof signinSchema>;
@@ -113,4 +115,108 @@ export async function signUpAction(
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/auth/signin" });
+}
+
+const forgotPasswordSchema = z.object({
+  email: z.email({ message: "Please enter a valid email." }),
+});
+
+const resetPasswordSchema = z.object({
+  password: z.string().min(8, "Password must be at least 8 characters long."),
+  token: z.string().min(1, "Token is required."),
+});
+
+export async function requestPasswordReset(formData: {
+  email: string;
+}): Promise<ActionState> {
+  const validateFields = forgotPasswordSchema.safeParse(formData);
+
+  if (!validateFields.success) {
+    return { status: "error", message: "Invalid email provided." };
+  }
+
+  const { email } = validateFields.data;
+
+  try {
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email),
+    });
+
+    // Always sent succes to prevent "email enumeration" attacks
+    if (!user) {
+      console.log("ERROR");
+      return {
+        status: "success",
+        message: "If user exists, a password reset link has been sent.",
+      };
+    }
+
+    const token = `${uuidv4()}`;
+    const expires = new Date(new Date().getTime() + 3600 * 1000); // 1h
+
+    await db.insert(passwordResetTokens).values({
+      token,
+      expires,
+      userId: user.id,
+    });
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const resetLink = `http://${process.env.NEXT_PUBLIC_APP_URL}/auth/forgot-password/confirm?token=${token}`;
+
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: "tinbukovina1c@gmail.com" /* email */,
+      subject: "Reset Your Password",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+    });
+
+    return {
+      status: "success",
+      message: "A password reset link ahs been sent.",
+    };
+  } catch (error) {
+    console.log(error);
+    return { status: "error", message: "Something went wrong." };
+  }
+}
+
+export async function resetPassword(
+  formData: z.infer<typeof resetPasswordSchema>,
+): Promise<ActionState> {
+  const validatedFields = resetPasswordSchema.safeParse(formData);
+
+  if (!validatedFields.success) {
+    return { status: "error", message: "Invalid data provided." };
+  }
+
+  const { password, token } = validatedFields.data;
+
+  try {
+    const resetToken = await db.query.passwordResetTokens.findFirst({
+      where: eq(passwordResetTokens.token, token),
+    });
+
+    if (!resetToken || new Date() > resetToken.expires) {
+      return { status: "error", message: "Invalid or expired token." };
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    await db
+      .update(users)
+      .set({ passwordHash })
+      .where(eq(users.id, resetToken.userId));
+
+    await db
+      .delete(passwordResetTokens)
+      .where(eq(passwordResetTokens.id, resetToken.id));
+
+    return {
+      status: "success",
+      message: "Password has been reset successfully.",
+    };
+  } catch (error) {
+    console.log(error);
+    return { status: "error", message: "Something went wrong." };
+  }
 }

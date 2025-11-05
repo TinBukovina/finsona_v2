@@ -2,16 +2,13 @@ import { auth } from "@/../auth";
 import { NextResponse } from "next/server";
 
 export default auth((req) => {
-  console.log("MIDDLEWARE");
   if (req.headers.get("Accept") == "text/x-component") {
-    console.log("fdsgalkfjhsalgvnbasludgahbfldosabn");
     return NextResponse.next();
   }
 
   const isServerAction = req.headers.get("next-action");
 
   if (isServerAction) {
-    console.log("fdsgalkfjhsalgvnbasludgahbfldosabn");
     return NextResponse.next();
   }
 

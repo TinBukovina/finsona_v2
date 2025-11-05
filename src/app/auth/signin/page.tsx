@@ -133,9 +133,9 @@ export default function SigninPage() {
 
         {/* Social links */}
         <div className="flex justify-center gap-2">
-          <SocialButton loginType="email" disabled={isLoading} />
-          <SocialButton loginType="google" disabled={isLoading} />
-          <SocialButton loginType="apple" disabled={isLoading} />
+          <SocialButton loginType="email" disabled={true /* isLoading */} />
+          <SocialButton loginType="google" disabled={true /* isLoading */} />
+          <SocialButton loginType="apple" disabled={true /* isLoading */} />
         </div>
 
         {/* Don't have an account */}

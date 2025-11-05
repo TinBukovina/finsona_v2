@@ -1,9 +1,16 @@
 "use client";
 
 import { SocialButton } from "@/_client/4_features";
-import { Button, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
+import {
+  Button,
+  Input,
+  LogoIcon,
+  RedirectLink,
+  toast,
+} from "@/_client/6_shared";
+import { requestPasswordReset } from "@/_server/actions/auth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface FormDataInterface {
   email: string;
@@ -17,8 +24,33 @@ export default function ForgotPasswordPage() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleChange = () => {};
-  const onSubmit = () => {};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("bok");
+    setIsLoading(true);
+
+    try {
+      console.log("Prije");
+      const res = await requestPasswordReset(form);
+
+      console.log(res);
+      if (res.status === "success") {
+        toast.success(res.message || "Password reset link sent.");
+        router.push("/auth/signin");
+      } else {
+        toast.error(res.message || "something went wrong.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex h-dvh items-center justify-center">
@@ -61,14 +93,7 @@ export default function ForgotPasswordPage() {
 
             {/* Buttons */}
             <div className="flex flex-col gap-4">
-              <Button
-                type="primary"
-                handleClick={(e) => {
-                  e.preventDefault();
-                  router.push("/auth/forgot-password/confirm");
-                }}
-                disabled={isLoading}
-              >
+              <Button type="primary" action="submit" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Send link"}
               </Button>
               <Button

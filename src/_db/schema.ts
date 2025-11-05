@@ -133,6 +133,18 @@ export const userAccounts = pgTable("user_accounts", {
 export type SelectUserAccount = typeof userAccounts.$inferSelect;
 export type InsertUserAccount = typeof userAccounts.$inferInsert;
 
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  token: text("token").notNull().unique(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export type SelectPasswordResetToken = typeof passwordResetTokens.$inferSelect;
+export type InsertPasswordResetToken = typeof passwordResetTokens.$inferInsert;
+
 export const transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("user_id")

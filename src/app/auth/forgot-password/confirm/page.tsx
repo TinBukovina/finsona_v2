@@ -1,8 +1,15 @@
 "use client";
 
 import { SocialButton } from "@/_client/4_features";
-import { Button, Input, LogoIcon, RedirectLink } from "@/_client/6_shared";
-import { useRouter } from "next/navigation";
+import {
+  Button,
+  Input,
+  LogoIcon,
+  RedirectLink,
+  toast,
+} from "@/_client/6_shared";
+import { resetPassword } from "@/_server/actions/auth";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 interface FormDataInterface {
@@ -12,6 +19,9 @@ interface FormDataInterface {
 
 export default function ConfirmPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const token = searchParams.get("token");
 
   const [form, setForm] = useState<FormDataInterface>({
     password: "Test123!$%",
@@ -19,8 +29,39 @@ export default function ConfirmPage() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleChange = () => {};
-  const onSubmit = () => {};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (form.password !== form.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    if (!token) {
+      toast.error("Invalid or missing reset token.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await resetPassword({ password: form.password, token });
+      if (res.status === "success") {
+        toast.success(res.message || "Password reset successful.");
+        router.push("/auth/signin");
+      } else {
+        toast.error(res.message || "something went wrong.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setIsLoading(true);
+    }
+  };
 
   return (
     <div className="flex h-dvh items-center justify-center">
@@ -72,14 +113,7 @@ export default function ConfirmPage() {
 
             {/* Buttons */}
             <div className="flex flex-col gap-4">
-              <Button
-                type="primary"
-                handleClick={(e) => {
-                  e.preventDefault();
-                  router.push("/auth/signin");
-                }}
-                disabled={isLoading}
-              >
+              <Button type="primary" action="submit" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Reset password"}
               </Button>
             </div>
