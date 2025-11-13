@@ -12,8 +12,8 @@ export { default as LogoutIcon } from "./logout.svg";
 export { default as HomeIcon } from "./HomeIcon";
 
 // Expand btn icons
-export { default as RightArrowIcon } from "./arrow_right.svg";
-export { default as LeftArrowIcon } from "./arrow_left.svg";
+export { default as RightArrowIcon } from "./ArrowRightIcon";
+export { default as LeftArrowIcon } from "./ArrowLeftIcon";
 export { default as SplitScreenIcon } from "./SplitScreenIcon";
 
 // Theme icons

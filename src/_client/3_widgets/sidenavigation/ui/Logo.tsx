@@ -7,17 +7,21 @@ import React from "react";
 
 interface LogoProps {
   disabled?: boolean;
+  shrink?: boolean;
 }
 
-export function Logo({ disabled = false }: LogoProps) {
+export function Logo({ shrink = false, disabled = false }: LogoProps) {
   const route = useRouter();
 
   function handleLogoClick() {
     route.push(paths.app.home.root);
   }
+
   return (
     <div
-      className="flex w-fit items-center gap-3 pl-3"
+      className={cn("flex w-fit items-center gap-3 pl-3", {
+        "p-0": shrink,
+      })}
       onClick={handleLogoClick}
       aria-hidden="true"
     >
@@ -31,6 +35,7 @@ export function Logo({ disabled = false }: LogoProps) {
             "text-muted-foreground text-h6": disabled,
             "focus:text-shadow-primary focus:text-primary hover:text-primary hover:cursor-pointer focus:text-shadow-2xs active:scale-95":
               !disabled,
+            hidden: shrink,
           },
         )}
       >
