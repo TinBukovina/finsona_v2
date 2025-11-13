@@ -1,6 +1,12 @@
 "use client";
 
-import { AppleIcon, cn, EmailFillIcon, GoogleIcon } from "@/_client/6_shared";
+import {
+  AppleIcon,
+  cn,
+  EmailFillIcon,
+  GoogleIcon,
+  paths,
+} from "@/_client/6_shared";
 import { useRouter } from "next/navigation";
 
 interface SocialButtonProps {
@@ -11,17 +17,17 @@ interface SocialButtonProps {
 const socialLinksData = [
   {
     name: "email",
-    link: "/auth/email-login",
+    link: paths.app.auth.emailLogin,
     icon: EmailFillIcon,
   },
   {
     name: "google",
-    link: "/auth/google-login",
+    link: paths.app.auth.googleLogin,
     icon: GoogleIcon,
   },
   {
     name: "apple",
-    link: "/auth/apple-login",
+    link: paths.app.auth.appleLogin,
     icon: AppleIcon,
   },
 ];

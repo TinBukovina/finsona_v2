@@ -1,7 +1,7 @@
 import { signOutAction } from "@/_server/actions/auth";
-import { auth } from "../../../auth";
+import { auth } from "../../../../../auth";
 
-export default async function AppPage() {
+export default async function HomePage() {
   const session = await auth();
 
   return (

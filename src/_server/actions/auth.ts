@@ -10,6 +10,7 @@ import { AuthError } from "next-auth";
 import z from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { signinSchema, signupSchema } from "../types";
+import { paths } from "@/_client/6_shared";
 
 type SigninFormData = z.infer<typeof signinSchema>;
 type ActionState = {
@@ -114,7 +115,7 @@ export async function signUpAction(
 }
 
 export async function signOutAction() {
-  await signOut({ redirectTo: "/auth/signin" });
+  await signOut({ redirectTo: paths.app.auth.signIn });
 }
 
 const forgotPasswordSchema = z.object({
@@ -161,7 +162,7 @@ export async function requestPasswordReset(formData: {
     });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const resetLink = `http://${process.env.NEXT_PUBLIC_APP_URL}/auth/forgot-password/confirm?token=${token}`;
+    const resetLink = `http://${process.env.NEXT_PUBLIC_APP_URL}${paths.app.auth.forgotPasswordConfirm(token)}`;
 
     await resend.emails.send({
       from: "onboarding@resend.dev",

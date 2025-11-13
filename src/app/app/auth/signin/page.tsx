@@ -1,52 +1,54 @@
 "use client";
 
-import { SocialButton } from "@/_client/4_features";
 import {
   Button,
   Input,
   LogoIcon,
+  paths,
   RedirectLink,
   toast,
 } from "@/_client/6_shared";
-import { requestPasswordReset } from "@/_server/actions/auth";
+import { SocialButton } from "@/_client/4_features";
+import { useState } from "react";
+import { signInAction } from "@/_server/actions/auth";
+import { signinSchema } from "@/_server/types";
+import z from "zod";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 
-interface FormDataInterface {
-  email: string;
-}
+type SigninFormData = z.infer<typeof signinSchema>;
 
-export default function ForgotPasswordPage() {
+export default function SigninPage() {
   const router = useRouter();
 
-  const [form, setForm] = useState<FormDataInterface>({
+  const [form, setForm] = useState<SigninFormData>({
     email: "tin.bukovina1@gmail.com",
+    password: "Test123!$%",
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("bok");
     setIsLoading(true);
 
     try {
-      console.log("Prije");
-      const res = await requestPasswordReset(form);
+      const res = await signInAction(form);
+      console.log("res: ", res);
 
-      console.log(res);
       if (res.status === "success") {
-        toast.success(res.message || "Password reset link sent.");
-        router.push("/auth/signin");
+        router.push(paths.app.home.root);
       } else {
-        toast.error(res.message || "something went wrong.");
+        toast.error(res.message || "An unexpected error occurred.");
       }
     } catch (error) {
-      console.log(error);
       toast.error("An unexpected error occurred.");
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -71,14 +73,14 @@ export default function ForgotPasswordPage() {
         <div className="flex flex-col gap-6">
           {/* Title and welcome text */}
           <div className="flex flex-col gap-2">
-            <h5 className="text-h5/tight font-semibold">Forgot password?</h5>
+            <h5 className="text-h5/tight font-semibold">Sign in</h5>
             <p className="text-muted-foreground text-normal/tight">
-              We will sent recovery link to your email.
+              Hi! Welcome back, you&apos;ve been missing.
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={onSubmit} className="relative flex flex-col gap-6">
+          <form onSubmit={onSubmit} className="relative flex flex-col gap-4">
             {/* Inputs */}
             <Input
               value={form.email}
@@ -90,23 +92,30 @@ export default function ForgotPasswordPage() {
               placeholder="Enter your email"
               disabled={isLoading}
             />
-
-            {/* Buttons */}
-            <div className="flex flex-col gap-4">
-              <Button type="primary" action="submit" disabled={isLoading}>
-                {isLoading ? "Loading..." : "Send link"}
-              </Button>
-              <Button
-                type="secondary"
-                handleClick={(e) => {
-                  e.preventDefault();
-                  router.back();
-                }}
+            <div className="flex flex-col gap-2">
+              <Input
+                value={form.password}
+                onChange={handleChange}
+                name="password"
+                label="Password"
+                inputType="password"
+                required={true}
+                placeholder="Enter your password"
+                disabled={isLoading}
+              />
+              {/* Forgot password */}
+              <RedirectLink
+                href={paths.app.auth.forgotPassword}
                 disabled={isLoading}
               >
-                {isLoading ? "Loading..." : "Back"}
-              </Button>
+                Forgot your password?
+              </RedirectLink>
             </div>
+
+            {/* Signin button */}
+            <Button type="primary" action="submit" disabled={isLoading}>
+              {isLoading ? "Loading..." : "Sign in"}
+            </Button>
           </form>
         </div>
 
@@ -121,15 +130,15 @@ export default function ForgotPasswordPage() {
 
         {/* Social links */}
         <div className="flex justify-center gap-2">
-          <SocialButton loginType="email" disabled={isLoading} />
-          <SocialButton loginType="google" disabled={isLoading} />
-          <SocialButton loginType="apple" disabled={isLoading} />
+          <SocialButton loginType="email" disabled={true /* isLoading */} />
+          <SocialButton loginType="google" disabled={true /* isLoading */} />
+          <SocialButton loginType="apple" disabled={true /* isLoading */} />
         </div>
 
         {/* Don't have an account */}
         <p className="text-center text-sm/[16px]">
           Don&apos;t have an account?{" "}
-          <RedirectLink href="/auth/signup" disabled={isLoading}>
+          <RedirectLink href={paths.app.auth.signUp} disabled={isLoading}>
             Sign up
           </RedirectLink>
         </p>

@@ -1,5 +1,6 @@
 import { auth } from "@/../auth";
 import { NextResponse } from "next/server";
+import { paths } from "./_client/6_shared";
 
 export default auth((req) => {
   if (req.headers.get("Accept") == "text/x-component") {
@@ -14,10 +15,10 @@ export default auth((req) => {
 
   const isLoggedIn = !!req.auth;
 
-  const isProtectedRoute = req.nextUrl.pathname.startsWith("/app");
+  const isProtectedRoute = !req.nextUrl.pathname.includes("/auth");
 
   if (isProtectedRoute && !isLoggedIn) {
-    const loginUrl = new URL("/auth/signin", req.nextUrl.origin);
+    const loginUrl = new URL(paths.app.auth.signIn, req.nextUrl.origin);
     return Response.redirect(loginUrl);
   }
 

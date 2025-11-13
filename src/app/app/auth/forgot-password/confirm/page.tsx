@@ -5,6 +5,7 @@ import {
   Button,
   Input,
   LogoIcon,
+  paths,
   RedirectLink,
   toast,
 } from "@/_client/6_shared";
@@ -51,7 +52,7 @@ export default function ConfirmPage() {
       const res = await resetPassword({ password: form.password, token });
       if (res.status === "success") {
         toast.success(res.message || "Password reset successful.");
-        router.push("/auth/signin");
+        router.push(paths.app.auth.signIn);
       } else {
         toast.error(res.message || "something went wrong.");
       }
@@ -139,7 +140,7 @@ export default function ConfirmPage() {
         {/* Don't have an account */}
         <p className="text-center text-sm/[16px]">
           Don&apos;t have an account?{" "}
-          <RedirectLink href="/auth/signup" disabled={isLoading}>
+          <RedirectLink href={paths.app.auth.signIn} disabled={isLoading}>
             Sign up
           </RedirectLink>
         </p>

@@ -5,6 +5,7 @@ import {
   Button,
   Input,
   LogoIcon,
+  paths,
   RedirectLink,
   toast,
 } from "@/_client/6_shared";
@@ -218,7 +219,7 @@ export default function SignupPage() {
         {/* Don't have an account */}
         <p className="text-center text-sm/[16px]">
           Don&apos;t have an account?{" "}
-          <RedirectLink href="/auth/signin" disabled={isLoading}>
+          <RedirectLink href={paths.app.auth.signIn} disabled={isLoading}>
             Sign in
           </RedirectLink>
         </p>
