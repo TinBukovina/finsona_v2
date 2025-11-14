@@ -25,7 +25,7 @@ export function Logo({ shrink = false, disabled = false }: LogoProps) {
       onClick={handleLogoClick}
       aria-hidden="true"
     >
-      <div className="transition-all duration-200 ease-out hover:scale-105 hover:cursor-pointer">
+      <div className="transition-all duration-200 ease-out hover:scale-107 hover:cursor-pointer">
         <Image src={"/svgs/logo.svg"} alt="logo" width={32} height={32} />
       </div>
       <button

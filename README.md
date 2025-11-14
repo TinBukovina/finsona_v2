@@ -1,12 +1,15 @@
 Next Things
-[] Implement desktop navigation
-[] Implement mobile navigation
-[] Implement theme change
-[] Implement logout btn
-[] Implement Transaction section
-[] Implement Budget section
+
+- navigation
+  [] Implement theme change
+  [] Implement logout btn
+  [] Implement Transaction section
+  [] Implement Budget section
 
 Naivgation
+[] Implement desktop navigation
+[] Implemetirati sidenavigation linkove
+[] Implement mobile navigation
 
 Auth
 [X] Sigin
