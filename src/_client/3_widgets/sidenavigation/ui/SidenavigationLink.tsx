@@ -16,7 +16,7 @@ export function SidenavigationLink({
   return (
     <button
       className={cn(
-        "text-sidebar-foreground text-normal hover:bg-sidebar-accent hover:text-accent-foreground flex items-center justify-start gap-4 rounded-full px-3 py-2 font-semibold",
+        "text-sidebar-foreground text-normal hover:bg-sidebar-accent hover:text-accent-foreground focus:border-primary focus:outline-primary/25 focus:bg-sidebar-accent flex items-center justify-start gap-4 rounded-full border border-transparent px-3 py-2 font-semibold transition-all duration-200 ease-out focus:outline-[3px]",
         {
           "": isActive,
         },
