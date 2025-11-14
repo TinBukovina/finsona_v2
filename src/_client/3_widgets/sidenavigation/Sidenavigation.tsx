@@ -16,9 +16,9 @@ import {
 
 const NAV_LINKS = [
   { copy: "Home", icon: HomeIcon, fillIcon: HomeFillIcon },
-  { copy: "budget", icon: PiggyIcon, fillIcon: PiggyFillIcon },
-  { copy: "dashboard", icon: DashboardIcon, fillIcon: DashboardFillIcon },
-  { copy: "settings", icon: SettingsIcon, fillIcon: SettingsFillIcon },
+  { copy: "Budget", icon: PiggyIcon, fillIcon: PiggyFillIcon },
+  { copy: "Dashboard", icon: DashboardIcon, fillIcon: DashboardFillIcon },
+  { copy: "Settings", icon: SettingsIcon, fillIcon: SettingsFillIcon },
 ];
 
 export default function Sidenavigation() {
@@ -46,9 +46,16 @@ export default function Sidenavigation() {
 
       {/* Top Nav Links */}
       <div className="flex flex-col gap-2">
-        {NAV_LINKS.map((link, index) => (
-          <SidenavigationLink key={link.copy}>{link.copy}</SidenavigationLink>
-        ))}
+        {NAV_LINKS.map((link, index) => {
+          const IconComponent = link.icon;
+
+          return (
+            <SidenavigationLink key={link.copy}>
+              <IconComponent width={24} height={24} />
+              {link.copy}
+            </SidenavigationLink>
+          );
+        })}
       </div>
     </div>
   );
