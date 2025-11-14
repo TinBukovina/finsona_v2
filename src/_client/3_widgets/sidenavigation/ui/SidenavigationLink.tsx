@@ -1,7 +1,17 @@
 "use client";
 
-interface NavigationLinkProps {}
+import HomeIocn from "@/_client/6_shared/svgs/HomeIcon";
+import type { ReactNode } from "react";
 
-export function NavigationLink({}: NavigationLinkProps) {
-  return <div>Navigation Link</div>;
+interface NavigationLinkProps {
+  children: ReactNode;
+}
+
+export function SidenavigationLink({ children }: NavigationLinkProps) {
+  return (
+    <button className="text-sidebar-foreground">
+      <HomeIocn />
+      {children}
+    </button>
+  );
 }

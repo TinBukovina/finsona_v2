@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { SVGProps } from "react";
 
-const HomeIocn = (props: SVGProps<SVGSVGElement>) => (
+const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -14,4 +14,4 @@ const HomeIocn = (props: SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-export default HomeIocn;
+export default SvgComponent;

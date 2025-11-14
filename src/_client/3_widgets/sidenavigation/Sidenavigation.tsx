@@ -1,8 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Logo, ExpandBtn } from "./ui";
-import { cn } from "@/_client/6_shared";
+import { Logo, ExpandBtn, SidenavigationLink } from "./ui";
+import {
+  cn,
+  DashboardFillIcon,
+  DashboardIcon,
+  HomeFillIcon,
+  HomeIcon,
+  PiggyFillIcon,
+  PiggyIcon,
+  SettingsFillIcon,
+  SettingsIcon,
+} from "@/_client/6_shared";
+
+const NAV_LINKS = [
+  { copy: "Home", icon: HomeIcon, fillIcon: HomeFillIcon },
+  { copy: "budget", icon: PiggyIcon, fillIcon: PiggyFillIcon },
+  { copy: "dashboard", icon: DashboardIcon, fillIcon: DashboardFillIcon },
+  { copy: "settings", icon: SettingsIcon, fillIcon: SettingsFillIcon },
+];
 
 export default function Sidenavigation() {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
@@ -26,9 +43,13 @@ export default function Sidenavigation() {
 
         <ExpandBtn isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
       </div>
-      <p>bok</p>
-      <p>bok</p>
-      <p>bok</p>
+
+      {/* Top Nav Links */}
+      <div className="flex flex-col gap-2">
+        {NAV_LINKS.map((link, index) => (
+          <SidenavigationLink key={link.copy}>{link.copy}</SidenavigationLink>
+        ))}
+      </div>
     </div>
   );
 }
