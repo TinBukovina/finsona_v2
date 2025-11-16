@@ -1,22 +1,25 @@
-import { settingsSchema } from "@/_server/schemas/settings";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { createContext } from "vm";
-import z from "zod";
+"use client";
 
-export type Settings = z.infer<typeof settingsSchema>;
-
-// Default values
-export const DEFAULT_SETTINGS: Settings = settingsSchema.parse({
-  theme: "system",
-});
+import { trpc } from "@/_server/client";
+import {
+  DEFAULT_SETTINGS,
+  type SettingsInterface,
+} from "@/_server/schemas/settings";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 // Types for context
 type SettingsContextValueProps = {
-  settings: Settings;
+  settings: SettingsInterface;
   isLoading: boolean;
+  isUpdating: boolean;
   error: string | null;
-  updateSettings: (partial: Partial<Settings>) => Promise<void>;
-  resetSettings: () => Promise<void>;
+  updateSettings: (partial: Partial<SettingsInterface>) => Promise<void>;
 };
 
 // Creating context
@@ -34,95 +37,38 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   userId,
   children,
 }) => {
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Helper functions
-  const fetchSettingsFromAPI = useCallback(() => {}, []);
-  const patchSettingsToAPI = useCallback(() => {}, []);
-
-  useEffect(() => {
-    let cancelled = true;
-
-    async function load() {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-      } catch (err: any) {
-        console.error(err);
-        if (!cancelled) {
-          setError(
-            err.message ?? "Error while catching settings data from API.",
-          );
-          setSettings(DEFAULT_SETTINGS);
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    load();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [userId, fetchSettingsFromAPI]);
-
-  const updateSettings = useCallback(
-    async (partial: Partial<Settings>) => {
-      setError(null);
-
-      setSettings((prev) => ({
-        ...prev,
-        ...partial,
-      }));
-
-      try {
-        const updated = await patchSettingsToAPI(userId, partial);
-
-        setSettings(updated);
-      } catch (err: any) {
-        console.error(err);
-        setError(err.message ?? "Error while updating settings.");
-
-        try {
-          const reloaded = await fetchSettingsFromAPI(userId);
-
-          setSettings(reloaded);
-        } catch (err: any) {
-          console.error(err);
-          setError(err.message ?? "Error while reloading settings.");
-        }
-      }
+  const { data, isLoading, error } = trpc.settings.get.useQuery(
+    { userId },
+    {
+      initialData: DEFAULT_SETTINGS,
     },
-    [userId, patchSettingsToAPI, fetchSettingsFromAPI],
   );
 
-  const resetSettings = useCallback(async () => {
-    try {
-      const updated = await patchSettingsToAPI(userId, DEFAULT_SETTINGS);
-      setSettings(updated);
-      setError(null);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message ?? "Error while resetting settings.");
-    }
-  }, [userId, patchSettingsToAPI]);
+  const utils = trpc.useUtils();
 
-  const value: SettingsContextValueProps = {
-    settings,
+  const updateMutation = trpc.settings.update.useMutation({
+    onSuccess: (updatedSettings) => {
+      utils.settings.get.setData({ userId }, updatedSettings);
+    },
+  });
+
+  const updateSettings = async (partial: Partial<SettingsInterface>) => {
+    await updateMutation.mutateAsync({
+      userId,
+      ...partial,
+    });
+  };
+
+  const ctxValue: SettingsContextValueProps = {
+    settings: data ?? DEFAULT_SETTINGS,
     isLoading,
-    error,
+    isUpdating: updateMutation.isPending,
+    error: error ? error.message : null,
     updateSettings,
-    resetSettings,
   };
 
   return (
-    <SettingsContext.Provider value={value}>
+    <SettingsContext.Provider value={ctxValue}>
       {children}
     </SettingsContext.Provider>
   );

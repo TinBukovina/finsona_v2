@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import TrpcProvider from "@/_server/TrpcProvider";
 import { Toaster } from "sonner";
+import { SettingsProvider } from "@/_client/1_app/providers/with-settings";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} dark bg-background antialiased`}
       >
         <Toaster />
-        <TrpcProvider>{children}</TrpcProvider>
+        <TrpcProvider>
+          <SettingsProvider userId="00802fab-e266-4e1b-a24a-e3cff1cba2c5">
+            {children}
+          </SettingsProvider>
+        </TrpcProvider>
       </body>
     </html>
   );

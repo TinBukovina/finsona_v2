@@ -2,6 +2,7 @@ import { MoonIcon, SunIcon } from "@/_client/6_shared";
 import { SidenavigationLink } from "./SidenavigationLink";
 import { useState } from "react";
 import { is } from "drizzle-orm";
+import { useSettings } from "@/_client/1_app";
 
 const SunIconComponent = SunIcon;
 const MoonIconComponent = MoonIcon;
@@ -11,11 +12,13 @@ interface ThemeBtnProps {
 }
 
 export function ThemeBtn({ isShrinked = false }: ThemeBtnProps) {
-  const mod = "dark";
+  const { settings, updateSettings, isUpdating } = useSettings();
   const [isHovering, setIsHovering] = useState<boolean>(false);
 
+  const theme = settings.theme;
+
   const IconComponent =
-    mod === "dark"
+    theme === "dark"
       ? isHovering
         ? SunIconComponent
         : MoonIconComponent
@@ -24,7 +27,7 @@ export function ThemeBtn({ isShrinked = false }: ThemeBtnProps) {
         : SunIconComponent;
 
   const copy =
-    mod === "dark"
+    theme === "dark"
       ? isHovering
         ? "Light"
         : "Dark"

@@ -1,6 +1,6 @@
 import { db } from "@/_db/drizzle";
 import { accounts, sessions, users, verificationTokens } from "@/_db/schema";
-import { signinSchema } from "@/_server/types";
+import { signinSchema } from "@/_server/schemas/auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
