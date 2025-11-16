@@ -9,7 +9,7 @@ import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 import z from "zod";
 import { v4 as uuidv4 } from "uuid";
-import { signinSchema, signupSchema } from "../types";
+import { signinSchema, signupSchema } from "../schemas/auth";
 import { paths } from "@/_client/6_shared";
 
 type SigninFormData = z.infer<typeof signinSchema>;

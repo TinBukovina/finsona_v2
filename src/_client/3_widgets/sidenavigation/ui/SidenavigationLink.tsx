@@ -1,21 +1,21 @@
 "use client";
 
 import { cn } from "@/_client/6_shared";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { ComponentPropsWithoutRef, type ReactNode } from "react";
 
-interface NavigationLinkProps {
+type ButtonProps = ComponentPropsWithoutRef<"button">;
+
+interface NavigationLinkProps extends ButtonProps {
   children: ReactNode;
   isActive?: boolean;
   isShrinked?: boolean;
-  handleClick?: () => void;
 }
 
 export function SidenavigationLink({
   children,
   isActive = false,
   isShrinked = false,
-  handleClick,
+  ...rest
 }: NavigationLinkProps) {
   return (
     <button
@@ -29,7 +29,7 @@ export function SidenavigationLink({
           "px-3 py-2": !isShrinked,
         },
       )}
-      onClick={handleClick}
+      {...rest}
     >
       {children}
     </button>

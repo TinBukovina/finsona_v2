@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Logo, ExpandBtn, SidenavigationLink } from "./ui";
+import { Logo, ExpandBtn, SidenavigationLink, ThemeBtn } from "./ui";
 import {
   cn,
   DashboardFillIcon,
@@ -80,7 +80,7 @@ export default function Sidenavigation() {
               key={link.copy}
               isActive={isLinkActive}
               isShrinked={!isExpanded}
-              handleClick={() => router.push(link.href)}
+              onClick={() => router.push(link.href)}
             >
               <IconComponent width={24} height={24} />
               {isExpanded ? link.copy : null}
@@ -90,9 +90,8 @@ export default function Sidenavigation() {
       </div>
 
       {/* Bottom Nav Links */}
-      <div className="flex flex-1 flex-col justify-end gap-2 bg-red-300">
-        <p>bok1</p>
-        <p>bok2</p>
+      <div className="flex flex-1 flex-col justify-end gap-2">
+        <ThemeBtn isShrinked={!isExpanded} />
       </div>
     </div>
   );
