@@ -30,7 +30,7 @@ export function Logo({ shrink = false, disabled = false }: LogoProps) {
       </div>
       <button
         className={cn(
-          "text-h6 text-sidebar-foreground outline-0 transition-all duration-200 ease-out hover:cursor-pointer",
+          "text-h6 text-sidebar-foreground outline-0 hover:cursor-pointer",
           {
             "text-muted-foreground text-h6": disabled,
             "focus:text-shadow-primary focus:text-primary hover:text-primary hover:cursor-pointer focus:text-shadow-2xs active:scale-95":
