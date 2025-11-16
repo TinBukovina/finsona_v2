@@ -25,7 +25,7 @@ export function ExpandBtn({ isExpanded, setIsExpanded }: ExpandBtnProps) {
   return (
     <button
       ref={buttonRef}
-      className="text-sidebar-foreground hover:bg-secondary focus-visible: focus-visible:border-primary focus-visible:outline-primary/25 box-border flex h-[40px] w-[40px] items-center justify-center rounded-full border border-transparent transition-all duration-200 ease-out focus-visible:outline-[3px]"
+      className="text-sidebar-foreground hover:bg-secondary focus-visible:border-primary focus-visible:outline-primary/25 box-border flex h-[40px] w-[40px] items-center justify-center rounded-full border border-transparent transition-all duration-200 ease-out focus-visible:outline-[3px]"
       onClick={() => {
         setIsHovering(false);
         setIsExpanded(!isExpanded);
