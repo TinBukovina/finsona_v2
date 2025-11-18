@@ -11,9 +11,9 @@ import {
 import { SocialButton } from "@/_client/4_features";
 import { useState } from "react";
 import { signInAction } from "@/_server/actions/auth";
-import { signinSchema } from "@/_server/types";
 import z from "zod";
 import { useRouter } from "next/navigation";
+import { signinSchema } from "@/_server/schemas/auth";
 
 type SigninFormData = z.infer<typeof signinSchema>;
 

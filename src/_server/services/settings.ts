@@ -8,6 +8,7 @@ import {
 } from "../schemas/settings";
 import { db } from "@/_db/drizzle";
 import { eq } from "drizzle-orm";
+import { cookies } from "next/headers";
 
 export async function getUserSettings(
   userId: string,
@@ -74,6 +75,13 @@ export async function updateUserSettings(
       baseCurrencyId: validated.baseCurrencyId,
     })
     .where(eq(users.id, userId));
+
+  if (parsedPartial.theme) {
+    (await cookies()).set("theme", parsedPartial.theme, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+    });
+  }
 
   return validated;
 }

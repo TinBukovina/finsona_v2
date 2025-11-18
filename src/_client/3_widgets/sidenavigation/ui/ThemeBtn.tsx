@@ -41,7 +41,7 @@ export function ThemeBtn({ isShrinked = false }: ThemeBtnProps) {
     updateSettings({ theme: nextTheme });
 
     if (typeof document !== "undefined") {
-      const root = document.body;
+      const root = document.documentElement;
       console.log(root.classList);
       if (nextTheme === "dark") {
         root.classList.add("dark");
