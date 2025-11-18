@@ -13,7 +13,7 @@ export type SettingsInterface = z.infer<typeof settingsSchema>;
 
 export const DEFAULT_SETTINGS: SettingsInterface = settingsSchema.parse({
   name: "User",
-  theme: "light",
+  theme: "dark",
   language: "en",
   numberFormat: "1.234,56",
   dateFormat: "dd.MM.yyyy",

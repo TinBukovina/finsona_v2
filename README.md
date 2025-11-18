@@ -1,7 +1,7 @@
 Next Things
 
 - navigation
-  [] Implement theme change
+  [x] Implement theme change
   [] Implement logout btn
   [] Implement Transaction section
   [] Implement Budget section

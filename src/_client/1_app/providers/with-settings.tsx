@@ -5,13 +5,7 @@ import {
   DEFAULT_SETTINGS,
   type SettingsInterface,
 } from "@/_server/schemas/settings";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext } from "react";
 
 // Types for context
 type SettingsContextValueProps = {
