@@ -81,6 +81,7 @@ export default function Sidenavigation() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // function that setts up new state and saves it to a local storage
   const setExpandedWithPersist = (
     value: boolean | ((prev: boolean) => boolean),
   ) => {

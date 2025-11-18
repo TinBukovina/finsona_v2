@@ -5,7 +5,6 @@ import { Toaster } from "sonner";
 import { SettingsProvider } from "@/_client/1_app/providers/with-settings";
 import TrpcProvider from "@/_server/api/TrpcProvider";
 import { cookies } from "next/headers";
-import { serverClient } from "@/_server/api/serverClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
