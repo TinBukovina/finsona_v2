@@ -22,15 +22,15 @@ export function SidenavigationLink({
   return (
     <button
       className={cn(
-        "text-sidebar-foreground text-normal flex items-center justify-start gap-4 rounded-full border-[1px] border-transparent px-2 py-2 font-semibold outline-[0px] transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out",
+        "text-sidebar-foreground text-normal flex items-center justify-start gap-4 rounded-full border-[1px] border-transparent px-2 py-2 font-semibold outline-[0px] transition-[background-color,border-color,color,box-shadow,transform,scale] duration-200 ease-out",
         {
           "bg-primary text-primary-foreground outline-[1px]":
             isActive && !disabled,
           "hover:text-accent-foreground focus-visible:outline-primary/25 focus-visible:border-primary hover:bg-sidebar-accent focus-visible:bg-sidebar-accent focus-visible:outline-[3px]":
             !isActive && !disabled,
           "px-2 py-2": isShrinked,
-          "px-3 py-2": !isShrinked,
-          "text-muted-foreground bg-muted": disabled,
+          "px-3 py-2 hover:scale-103": !isShrinked,
+          "text-muted-foreground bg-muted hover:scale-100": disabled,
           "cursor-pointer": !disabled,
         },
       )}

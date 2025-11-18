@@ -9,7 +9,7 @@ Next Things
 Naivgation
 [] Implement desktop navigation
 [x] Implemetirati sidenavigation linkove
-[] Implementirati theme btn
+[X] Implementirati theme btn
 [] Implementirati logout btn
 [] Implement mobile navigation
 

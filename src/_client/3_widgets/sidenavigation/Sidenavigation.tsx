@@ -8,6 +8,7 @@ import {
   DashboardIcon,
   HomeFillIcon,
   HomeIcon,
+  LogoutIcon,
   paths,
   PiggyFillIcon,
   PiggyIcon,
@@ -15,6 +16,7 @@ import {
   SettingsIcon,
 } from "@/_client/6_shared";
 import { usePathname, useRouter } from "next/navigation";
+import { signOutAction } from "@/_server/actions/auth";
 
 const topNavLinks = [
   {
@@ -92,6 +94,10 @@ export default function Sidenavigation() {
       {/* Bottom Nav Links */}
       <div className="flex flex-1 flex-col justify-end gap-2">
         <ThemeBtn isShrinked={!isExpanded} />
+        <SidenavigationLink isShrinked={!isExpanded}>
+          <LogoutIcon width={24} height={24} onClick={signOutAction} />
+          {isExpanded && "Logout"}
+        </SidenavigationLink>
       </div>
     </div>
   );
