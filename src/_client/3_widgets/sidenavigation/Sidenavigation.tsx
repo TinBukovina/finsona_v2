@@ -16,7 +16,7 @@ import {
   SettingsIcon,
 } from "@/_client/6_shared";
 import { usePathname, useRouter } from "next/navigation";
-import { signOutAction } from "@/_server/actions/auth";
+import { signOut } from "next-auth/react";
 
 const topNavLinks = [
   {
@@ -94,8 +94,14 @@ export default function Sidenavigation() {
       {/* Bottom Nav Links */}
       <div className="flex flex-1 flex-col justify-end gap-2">
         <ThemeBtn isShrinked={!isExpanded} />
-        <SidenavigationLink isShrinked={!isExpanded}>
-          <LogoutIcon width={24} height={24} onClick={signOutAction} />
+        <SidenavigationLink
+          isShrinked={!isExpanded}
+          onClick={() => {
+            console.log("bok");
+            signOut({ redirectTo: "/login" });
+          }}
+        >
+          <LogoutIcon width={24} height={24} />
           {isExpanded && "Logout"}
         </SidenavigationLink>
       </div>

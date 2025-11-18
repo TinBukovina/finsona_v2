@@ -38,7 +38,7 @@ export default function SignupPage() {
   });
   const [formErrors, setFormErrors] = useState<FormErrorState>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFormSubmited, setIsFormSubmited] = useState<boolean>(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -51,11 +51,11 @@ export default function SignupPage() {
     e.preventDefault();
     setFormErrors({});
     setIsLoading(true);
-    setIsFormSubmited(true);
+    setIsFormSubmitted(true);
 
     if (form.password !== form.confirmPassword) {
       setIsLoading(false);
-      setIsFormSubmited(false);
+      setIsFormSubmitted(false);
       setFormErrors({
         message: "Please fix all errors.",
         errors: {
@@ -130,7 +130,7 @@ export default function SignupPage() {
                   isValid={
                     formErrors.errors?.name
                       ? false
-                      : isFormSubmited
+                      : isFormSubmitted
                         ? true
                         : null
                   }
@@ -147,7 +147,7 @@ export default function SignupPage() {
                   isValid={
                     formErrors.errors?.surname
                       ? false
-                      : isFormSubmited
+                      : isFormSubmitted
                         ? true
                         : null
                   }
@@ -166,7 +166,7 @@ export default function SignupPage() {
                 isValid={
                   !!formErrors.errors?.email
                     ? false
-                    : isFormSubmited
+                    : isFormSubmitted
                       ? true
                       : null
                 }
@@ -184,7 +184,7 @@ export default function SignupPage() {
                 isValid={
                   formErrors.errors?.password
                     ? false
-                    : isFormSubmited
+                    : isFormSubmitted
                       ? true
                       : null
                 }
@@ -202,7 +202,7 @@ export default function SignupPage() {
                 isValid={
                   formErrors.errors?.password
                     ? false
-                    : isFormSubmited
+                    : isFormSubmitted
                       ? true
                       : null
                 }
