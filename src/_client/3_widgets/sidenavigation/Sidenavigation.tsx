@@ -105,7 +105,7 @@ export default function Sidenavigation() {
   return (
     <div
       className={cn(
-        "bg-sidebar-background flex shrink-0 flex-col gap-8 px-3 py-6",
+        "bg-sidebar-background hidden shrink-0 flex-col gap-8 px-3 py-6 sm:flex",
         "w-[66px]",
         isExpanded ? "lg:w-[220px]" : "lg:w-[66px]",
       )}

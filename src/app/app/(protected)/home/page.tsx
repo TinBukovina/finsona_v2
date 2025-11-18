@@ -5,7 +5,7 @@ export default async function HomePage() {
   const session = await auth();
 
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center justify-center p-8">
+    <div className="bg-background flex flex-1 flex-col items-center justify-center p-8">
       <div className="bg-card border-border rounded-card text-card-foreground flex w-full max-w-md flex-col gap-6 border p-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Dobrodošli!</h1>

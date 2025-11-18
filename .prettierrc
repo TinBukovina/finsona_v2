@@ -6,6 +6,8 @@
   "printWidth": 80,
   "endOfLine": "auto",
   "arrowParens": "always",
-  "plugins": ["prettier-plugin-tailwindcss"],
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
   "tailwindFunctions": ["cn"]
 }

@@ -12,8 +12,9 @@ Naivgation
 - [x] Implemetirati sidenavigation linkove
 - [x] Implementirati theme btn
 - [x] Implementirati logout btn
-- [ ] Implementirati da se navigacija obavezno shrinka na manjim ekranima
-      [] Implement mobile navigation
+- [x] Implementirati da se navigacija obavezno shrinka na manjim ekranima
+
+[] Implement mobile navigation
 
 Auth
 [X] Sigin
