@@ -3,7 +3,7 @@ import {
   getUserSettings,
   updateUserSettings,
 } from "@/_server/services/settings";
-import { createTRPCRouter, publicProcedure } from "@/_server/trpc";
+import { createTRPCRouter, publicProcedure } from "@/_server/api/trpc";
 import z from "zod";
 
 export const settingsRouter = createTRPCRouter({

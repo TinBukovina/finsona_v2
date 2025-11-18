@@ -1,6 +1,6 @@
 "use client";
 
-import { trpc } from "@/_server/client";
+import { trpc } from "@/_server/api/client";
 import {
   DEFAULT_SETTINGS,
   type SettingsInterface,

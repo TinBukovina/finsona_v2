@@ -8,7 +8,9 @@ Next Things
 
 Naivgation
 [] Implement desktop navigation
-[] Implemetirati sidenavigation linkove
+[x] Implemetirati sidenavigation linkove
+[] Implementirati theme btn
+[] Implementirati logout btn
 [] Implement mobile navigation
 
 Auth
