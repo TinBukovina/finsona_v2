@@ -8,10 +8,12 @@ Next Things
 
 Naivgation
 [] Implement desktop navigation
-[x] Implemetirati sidenavigation linkove
-[X] Implementirati theme btn
-[] Implementirati logout btn
-[] Implement mobile navigation
+
+- [x] Implemetirati sidenavigation linkove
+- [x] Implementirati theme btn
+- [x] Implementirati logout btn
+- [ ] Implementirati da se navigacija obavezno shrinka na manjim ekranima
+      [] Implement mobile navigation
 
 Auth
 [X] Sigin

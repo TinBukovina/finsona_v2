@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo, ExpandBtn, SidenavigationLink, ThemeBtn } from "./ui";
 import {
   cn,
@@ -45,30 +45,83 @@ const topNavLinks = [
   },
 ];
 
+const COLLAPSE_BREAKPOINT = 1024;
+const SIDENAV_EXPANDED_KEY = "finsona:sidenav-expanded";
+
 export default function Sidenavigation() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [forceCollapse, setForceCollapse] = useState<boolean>(false);
+
+  const isActuallyExpanded = isExpanded && !forceCollapse;
+
+  // useEffect for storing state in local storage for is sidenavigation expanded
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const stored = window.localStorage.getItem(SIDENAV_EXPANDED_KEY);
+    if (stored === "true") setIsExpanded(true);
+    if (stored === "false") setIsExpanded(false);
+  }, []);
+
+  // useEffect for adding event for force collapsing sidenavigation
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window === "undefined") return;
+
+      setForceCollapse(window.innerWidth < COLLAPSE_BREAKPOINT);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const setExpandedWithPersist = (
+    value: boolean | ((prev: boolean) => boolean),
+  ) => {
+    setIsExpanded((prev) => {
+      const next =
+        typeof value === "function"
+          ? (value as (p: boolean) => boolean)(prev)
+          : value;
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          SIDENAV_EXPANDED_KEY,
+          next ? "true" : "false",
+        );
+      }
+
+      return next;
+    });
+  };
 
   return (
     <div
       className={cn(
-        "bg-sidebar-background flex w-[220px] shrink-0 flex-col gap-8 py-6 pr-4 pl-3",
-        {
-          "w-fit px-3": !isExpanded,
-        },
+        "bg-sidebar-background flex shrink-0 flex-col gap-8 px-3 py-6",
+        "w-[66px]",
+        isExpanded ? "lg:w-[220px]" : "lg:w-[66px]",
       )}
     >
       {/* Logo and Expand btn */}
       <div
         className={cn("flex items-center justify-between", {
-          "flex-col gap-8": !isExpanded,
+          "flex-col gap-8": !isActuallyExpanded,
         })}
       >
-        <Logo shrink={!isExpanded} />
+        <Logo shrink={!isActuallyExpanded} />
 
-        <ExpandBtn isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
+        <ExpandBtn
+          isExpanded={isActuallyExpanded}
+          setIsExpanded={setExpandedWithPersist}
+          remove={forceCollapse}
+        />
       </div>
 
       {/* Top Nav Links */}
@@ -81,11 +134,11 @@ export default function Sidenavigation() {
             <SidenavigationLink
               key={link.copy}
               isActive={isLinkActive}
-              isShrinked={!isExpanded}
+              isShrinked={!isActuallyExpanded}
               onClick={() => router.push(link.href)}
             >
               <IconComponent width={24} height={24} />
-              {isExpanded ? link.copy : null}
+              {isActuallyExpanded ? link.copy : null}
             </SidenavigationLink>
           );
         })}
@@ -93,16 +146,16 @@ export default function Sidenavigation() {
 
       {/* Bottom Nav Links */}
       <div className="flex flex-1 flex-col justify-end gap-2">
-        <ThemeBtn isShrinked={!isExpanded} />
+        <ThemeBtn isShrinked={!isActuallyExpanded} />
         <SidenavigationLink
-          isShrinked={!isExpanded}
+          isShrinked={!isActuallyExpanded}
           onClick={() => {
             console.log("bok");
             signOut({ redirectTo: "/login" });
           }}
         >
           <LogoutIcon width={24} height={24} />
-          {isExpanded && "Logout"}
+          {isActuallyExpanded && "Logout"}
         </SidenavigationLink>
       </div>
     </div>
